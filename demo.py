@@ -1,10 +1,12 @@
-### SET ###
+from tkinter import *
+if (__name__ == "__main__"):
+    window = Tk()
 
-#1. It is denoted by ()  , {10, 20, 30, 40}
+    window.geometry("300x400")
+    window.title("First program")
 
-#2. Type of Data  (Heterogenous)  ,   Unique data(not changable)
+    label = Label(window, text="Hello World!")
+    label.grid(row=1,column=1)
 
-#3. Sequance    (Ordered)
-
-#4. Changable   (Mutable , Not editable)
+    window.mainloop()
 
