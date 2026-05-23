@@ -1,12 +1,4 @@
-from tkinter import *
-if (__name__ == "__main__"):
-    window = Tk()
+print("Hello World...!")
 
-    window.geometry("300x400")
-    window.title("First program")
-
-    label = Label(window, text="Hello World!")
-    label.grid(row=1,column=1)
-
-    window.mainloop()
+print("Hello World..!")
 
