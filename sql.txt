@@ -1,0 +1,8 @@
+create database library_db;
+
+use library_db;
+
+create table Book(bid INT PRIMARY KEY AUTO_INCREMENT,bname VARCHAR(100) NOT NULL, price DECIMAL(10,2) NOT NULL,author VARCHAR(100) NOT NULL);
+
+INSERT INTO Book (bname, price, author) VALUES ("Python",350,"Pratik");
+
