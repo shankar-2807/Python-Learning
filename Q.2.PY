@@ -1,11 +1,14 @@
-#Write a program to calculate simple interest based on Principal, Rate and Time (SI = P*R*T/100)
+# Write a program to calculate the sum of following series where n is input by user.
+# 1/1! + 2/2! + 3/3! + 4/4! + ... N/N!
 
-P = int(input("Enter a principle amout: "))
-R = int(input("Enter a Interest amount: "))
-T = int(input("Enter a Time in years: "))
+n = int(input("Enter the value of N: "))
+sum = 0
 
-SI = (P * R * T / 100)
-print("simple interest: ", SI)
+for i in range(1, n + 1):
+    fact = 1
+    for j in range(1, i + 1):
+        fact = fact * j
+    sum = sum + (i / fact)
 
-
+print("The sum of the series is:", sum)
 
