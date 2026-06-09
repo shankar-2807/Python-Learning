@@ -1,14 +1,24 @@
-#Write a program to find the area and perimeter of following figure (Accept the length, breadth and radius from user):
+# Write a program to print first n prime numbers
 
-length = int(input("Enter the length of the rectangle: "))
-breadth = int(input("Enter the breadth of the rectangle: "))
+n = int(input("Enter how many prime numbers to print: "))
 
-area_of_rectangle = length * breadth
-perimeter_of_rectangle = 2 * (length + breadth)
+count = 0
+num = 2
 
-print('Rectangle: ')
-print("Area =", area_of_rectangle)
-print("Perimeter =", perimeter_of_rectangle)
-
+while count < n:
+    is_prime = True
+    if num < 2:
+        is_prime = False
+    else:
+        i = 2
+        while i * i <= num:
+            if num % i == 0:
+                is_prime = False
+                break
+            i += 1
+    if is_prime:
+        print(num, end=' ')
+        count += 1
+    num += 1
 
 
