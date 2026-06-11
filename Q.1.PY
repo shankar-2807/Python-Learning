@@ -1,24 +1,12 @@
-# Write a program to print first n prime numbers
+# Write a function which we pass parameter and print factors of a given number.
+# for eg : factor of 12 : 1,2,3,4,5,12
 
-n = int(input("Enter how many prime numbers to print: "))
+n = int(input("Enter a number:"))
+def print_factors(n):
+    print(f"Factors of {n}:")
+    for i in range(1, n + 1):
+        if n % i == 0:
+            print(i)
 
-count = 0
-num = 2
-
-while count < n:
-    is_prime = True
-    if num < 2:
-        is_prime = False
-    else:
-        i = 2
-        while i * i <= num:
-            if num % i == 0:
-                is_prime = False
-                break
-            i += 1
-    if is_prime:
-        print(num, end=' ')
-        count += 1
-    num += 1
-
+print_factors(n)
 
