@@ -1,5 +1,23 @@
-# Write a program to accept basic salary of n emp. (n should be accepted from user). If basic salary is below 20000 then
-# da=10%,ta=12% and hra=15% otherwise da=15%,ta=18% and hra=20%. Based on this calculate the total salary of each emp
-# and also total salary of all emp.
+# WAP to print following pattern 
+# *************************
+#                      *
+#                 *
+#             *
+#         *
+#     *
+# ************************
 
-n = int(input("Enter a number: "))
+def pattern():
+    print("*" * 22)
+
+    for i in range(10):
+    #for j in range(10):
+        if (i == 4):
+            print("*")
+        else:
+            print("*")
+
+    print("*" * 22)
+
+pattern()
+
