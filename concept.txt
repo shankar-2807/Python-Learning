@@ -1,0 +1,58 @@
+def addNumbers(request):
+    return render(request,"demoSum.html")
+
+def showResult(request):
+    num1 = int(request.GET["first"])
+    num2 = int(request.GET["second"])
+    result = num1 + num2
+    print(result)
+    return HttpResponse(result)
+	
+	============================================
+	demoSum.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <table border="1">
+        <tr><td>Enter First Number</td><td>
+        <input type="text" name="num1" id="num1"/></td></tr>
+        <tr><td>Enter Second Number</td><td>
+            <input type="text" name="num2" id="num2"/></td></tr>
+        <tr><td><input type="button" id="addNumber" value="Add Numbers"/></td></tr>
+    </table>
+    <h1>Result = <span id="message"></span></h1>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        $('#addNumber').click(function()
+    {
+       num1 = $('#num1').val();
+       num2 = $('#num2').val();       
+       $.ajax(
+         {
+            type:"GET",
+            url: "/showResult",
+            data:{
+                    first: num1,
+                    second: num2,
+            },
+            success: function( data ) 
+            {               
+                $('#message').text(data);
+            }
+        })    
+
+       
+    });
+    </script>
+    
+</body>
+</html>
+
+/////////////////////////////////////////////////////////////////
