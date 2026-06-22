@@ -1,7 +1,11 @@
-from django.contrib import admin
-from django.urls import path,include
+from django.urls import path
+from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('',include('MyApp.urls')),
+    path('demo1',views.demo1),    
+    path('showResult',views.showResult),
+    path('addProduct',views.addProduct),
+    path('saveProduct',views.saveProduct),
+    path('showProducts',views.showAllProducts),
+    path('updateProduct',views.updateProduct),
 ]
