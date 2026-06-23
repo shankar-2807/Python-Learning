@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <table border="1">
+        <tr><td>Enter Product Name</td><td>
+        <input type="text" id="pname"/></td></tr>
+        <tr><td>Enter Product Price</td><td>
+            <input type="text" id="price"/></td></tr>
+        <tr><td>Enter Product Quantity</td><td>
+            <input type="text" id="qty"/></td></tr>
+                
+        <tr><td><input type="button" id="addProduct" value="Add Product"/></td></tr>
+    </table>
+    <h1>Result = <span id="message"></span></h1>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        $('#addProduct').click(function()
+    {
+       pname = $('#pname').val();
+       price = $('#price').val();       
+       qty = $('#qty').val();       
+       $.ajax(
+         {
+            type:"GET",
+            url: "/saveProduct",
+            data:{
+                    pname: pname,
+                    price : price,
+                    qty : qty
+            },
+            success: function( data ) 
+            {               
+                $('#message').text(data);
+            }
+        })    
+
+       
+    });
+    </script>
+    
+</body>
+</html>
