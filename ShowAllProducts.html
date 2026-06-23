@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <center>
+        <h1>List of all Products</h1>
+        <hr/>
+    <table border="1">
+        
+        <tr><th>Id</th><th>PName</th><th>Price</th><th>Quantity</th></tr>
+        {%for prd in prds%}
+        <tr>
+            <td>{{prd.id}}</td>
+            <td>{{prd.pname}}</td>
+            <td>{{prd.price}}</td>
+            <td>
+                <div class="container">
+                    <input type="hidden" class="prd_id" name="prd_id" value="{{prd.id}}"/>
+                    <input type="text" name="qty" class="qty" maxlength="12" value="{{prd.qty}}" class="input-text qty" />
+                    <div class="button-container">
+                            <button class="cart-qty-plus" type="button" value="+">+</button>
+                            <button class="cart-qty-minus" type="button" value="-">-</button>
+                    </div>
+                    </div>
+            </td>
+        </tr>
+        {%endfor%}
+    </table>
+</center>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        var incrementPlus;
+var decrementMinus;
+
+var buttonPlus  = $(".cart-qty-plus");
+var decrementMinus = $(".cart-qty-minus");
+
+var incrementPlus = buttonPlus.click(function() {
+	var $n = $(this)
+		.parent(".button-container")
+		.parent(".container")
+		.find(".qty");
+
+    var $id = $(this)
+		.parent(".button-container")
+		.parent(".container")
+		.find(".prd_id");
+	$n.val(Number($n.val())+1 );
+    $.ajax(
+         {
+            type:"GET",
+            url: "/updateProduct",
+            data:{
+                    prd_id: $id.val(),
+                    qty: $n.val(),
+            },
+       
+});
+});
+
+var decrementMinus = buttonMinus.click(function() {
+		var $n = $(this)
+		.parent(".button-container")
+		.parent(".container")
+		.find(".qty");
+
+    var $id = $(this)
+	.parent(".button-container")
+	.parent(".container")
+	.find(".prd_id");
+
+var amount = Number($n.val());
+	if (amount > 0) {
+		$n.val(amount-1);
+	}
+
+    $.ajax(
+         {
+            type:"GET",
+            url: "/updateProduct",
+            data:{
+                    prd_id: $id.val(),
+                    qty: $n.val(),
+            },
+       
+});
+});
+    </script>
+
+
+</body>
+</html>
