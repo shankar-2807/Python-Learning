@@ -1,0 +1,5 @@
+1|Ranjeet Kamble|Python Trainer|7878787878|ranjeetkamble99@gmail.com
+2|Ranjit Kale|MySql Trainer|7878787878|ranjitkale99@gmail.com
+3|Shubham Wagh|Java Trainer|7878787878|shubhamwagh99@gmail.com
+4|sonal jaju|Data Science|1234567891|sonaljaju9@gmail.com
+5|vaishali reddy|Flask|1234567890|vaishalireddy98@gmail.com
