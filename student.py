@@ -1,40 +1,115 @@
-import getpass
-from helpers import prompt_nonempty, search_keyword, show_all
+import os
 
-def student_change_password(student):
-    old = getpass.getpass("Enter old password: ")
-    if old != student.get("password"):
-        print("Incorrect old password!")
-        return
-    new = getpass.getpass("Enter new password: ")
-    if not new:
-        print("New password cannot be empty.")
-        return
-    student["password"] = new
-    print("Password changed successfully!")
+class Student:
+    def __init__(self, username, student_id):
+        self.username = username
+        self.student_id = student_id
 
-def student_view_all_courses(courses):
-    show_all(courses, "All Courses")
+    def menu(self):
+        while True:
+            print("\n--- Student Menu ---")
+            print("1. Change password")
+            print("2. Course: view/search/select")
+            print("3. Notice: view/search")
+            print("4. Staff: view/search")
+            print("5. Logout")
 
-def student_search_course(courses):
-    kw = prompt_nonempty("Enter keyword (id/name): ")
-    res = search_keyword(courses, ["id", "name"], kw)
-    show_all(res, "Course Search Results")
+            ch = input("Choose: ")
+            if ch == '1':
+                self.change_password()
+            elif ch == '2':
+                self.course_menu()
+            elif ch == '3':
+                self.notice_menu()
+            elif ch == '4':
+                self.staff_menu()
+            elif ch == '5':
+                print("Logging out...")
+                break
+            else:
+                print("Invalid choice!")
 
-def student_view_all_staff(staff):
-    show_all(staff, "All Staff")
+    def course_menu(self):
+        while True:
+            print("\nCourse Actions: 1.viewall 2.search 3.select 4.back")
+            ch = input("Choose: ")
+            if ch == '1':
+                self.view_all("courses.txt")
+            elif ch == '2':
+                self.search("courses.txt")
+            elif ch == '3':
+                cid = input("Enter Course ID to select: ")
+                print(f"Course {cid} selected successfully!")
+            elif ch == '4':
+                break
+            else:
+                print("Invalid choice!")
 
-def student_search_staff(staff):
-    kw = prompt_nonempty("Enter keyword (id/name/dept): ")
-    res = search_keyword(staff, ["id", "name", "dept"], kw)
-    show_all(res, "Staff Search Results")
+    def staff_menu(self):
+        while True:
+            print("\nStaff Actions: 1.viewall 2.search 3.back")
+            ch = input("Choose: ")
+            if ch == '1':
+                self.view_all("staff.txt")
+            elif ch == '2':
+                self.search("staff.txt")
+            elif ch == '3':
+                break
+            else:
+                print("Invalid choice!")
 
-def student_view_all_notices(notices):
-    show_all(notices, "All Notices")
+    def notice_menu(self):
+        while True:
+            print("\nNotice Actions: 1.viewall 2.search 3.back")
+            ch = input("Choose: ")
+            if ch == '1':
+                self.view_all("notices.txt")
+            elif ch == '2':
+                self.search("notices.txt")
+            elif ch == '3':
+                break
+            else:
+                print("Invalid choice!")
 
-def student_search_notice(notices):
-    kw = prompt_nonempty("Enter keyword (id/title/msg): ")
-    res = search_keyword(notices, ["id", "title", "msg"], kw)
-    show_all(res, "Notice Search Results")
+    def change_password(self):
+        new_pass = input("Enter new password: ")
+        lines = open("credentials.txt").readlines()
+        with open("credentials.txt", "w") as f:
+            for line in lines:
+                parts = line.strip().split("|")
+                if parts[0] == self.username and parts[2] == "student":
+                    parts[1] = new_pass
+                    f.write("|".join(parts) + "\n")
+                    print("Password changed successfully!")
+                else:
+                    f.write(line)
 
-    
+    def view_all(self, file):
+        try:
+            with open(file, "r") as f:
+                data = f.readlines()
+                if not data:
+                    print("No records found.")
+                for d in data:
+                    print(d.strip())
+        except FileNotFoundError:
+            print("File not found!")
+
+    def search(self, file):
+        key = input("Enter keyword to search: ")
+        try:
+            with open(file, "r") as f:
+                found = False
+                for line in f:
+                    if key.lower() in line.lower():
+                        print(line.strip())
+                        found = True
+                if not found:
+                    print("No matching record found.")
+        except FileNotFoundError:
+            print("File not found!")
+
+
+
+
+
