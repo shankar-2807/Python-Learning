@@ -1,11 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My First Page</title>
+  <meta charset="UTF-8" />
+  <title>Animal Detection System</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: url("/static/uploads/animals.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    .container {
+      background-color: papayawhip;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 500px;
+    }
+    input[type="file"], button {
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
-    <p>This is a paragraph</p>
+  <div class="container">
+    <h2>Upload an Image for Animal Detection</h2>
+    <form action="/predict" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" accept="image/*" required><br><br>
+      <h3>Click Here To Predict</h3>
+      <button type="submit">Predict</button>
+    </form>
+    <br><br>
+    {% if prediction %}
+      <h3>Prediction: {{ prediction }}</h3>
+      <img src="{{ image_path }}" alt="Uploaded Image" width="300">
+    {% endif %}
+  </div>
 </body>
 </html>
+
+
