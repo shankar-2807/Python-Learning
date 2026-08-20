@@ -1,110 +1,102 @@
-from flask import render_template,redirect,request,url_for
-import mysql.connector 
+from flask import Flask, render_template, request, redirect, url_for, session
+import numpy as np
+import os
+from tensorflow.keras.applications import MobileNetV2
+from tensorflow.keras.applications.mobilenet_v2 import preprocess_input, decode_predictions
+from tensorflow.keras.preprocessing import image
 
-con = mysql.connector.connect(host="localhost",user="root",password="shankar@2807",database='library_db')
+app = Flask(__name__)
+app.secret_key = 'your_secret_key_here'
+app.config['UPLOAD_FOLDER'] = 'static/uploads/'
 
-def add_book():
-    if request.method == "GET":
-        return render_template("add_book.html")
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
+
+# Load pretrained model
+model = MobileNetV2(weights="imagenet")
+
+# Map many ImageNet labels to simpler animal categories
+animal_mapping = {
+    # Horses
+    "sorrel": "Horse", "Appaloosa": "Horse", "Arabian_horse": "Horse", "Palomino": "Horse",
+    # Dogs (group all dog breeds)
+    "German_shepherd": "Dog", "Labrador_retriever": "Dog", "golden_retriever": "Dog",
+    "beagle": "Dog", "pug": "Dog", "dalmatian": "Dog",
+    # Cats (group cat breeds)
+    "Siamese_cat": "Cat", "Persian_cat": "Cat", "Egyptian_cat": "Cat", "tabby": "Cat",
+    # Lions
+    "lion": "Lion",
+    # Buffalos / ox family
+    "ox": "Buffalo", "bison": "Buffalo", "water_buffalo": "Buffalo",
+    # Elephants
+    "Indian_elephant": "Elephant", "African_elephant": "Elephant"
+}
+
+users = {}
+
+@app.route('/')
+def index():
+    return render_template('signup_login.html')
+
+@app.route('/signup', methods=['POST'])
+def signup():
+    username = request.form['username']
+    password = request.form['password']
+    if username in users:
+        return "User already exists"
+    users[username] = password
+    return redirect(url_for('login_page'))
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form['username']
+    password = request.form['password']
+    if username in users and users[username] == password:
+        session['username'] = username
+        return redirect(url_for('main_page'))
+    return "Invalid credentials"
+
+@app.route('/login_page')
+def login_page():
+    return render_template('signup_login.html')
+
+@app.route('/main')
+def main_page():
+    return render_template("index.html")
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    if 'file' not in request.files:
+        return "No file uploaded"
+
+    file = request.files['file']
+    if file.filename == '':
+        return "No file selected"
+
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+    file.save(filepath)
+
+    img = image.load_img(filepath, target_size=(224, 224))
+    img_array = image.img_to_array(img)
+    img_array = np.expand_dims(img_array, axis=0)
+    img_array = preprocess_input(img_array)
+
+    predictions = model.predict(img_array)
+    decoded = decode_predictions(predictions, top=1)[0][0]
+
+    label = decoded[1]
+    confidence = round(float(decoded[2]) * 100, 2)
+
+    if label in animal_mapping:
+        predicted_class = animal_mapping[label]
     else:
-        bname = request.form.get("bname")
-        sql = "insert into Destination (bname) values (%s)"
-        val = (bname,)
-        cursor =  con.cursor()
-        cursor.execute(sql,val)
-        con.commit()
-        return redirect(url_for("showAllbook")) 
+        predicted_class = "Unknown"
 
-   
+    return render_template("index.html", prediction=f"{predicted_class} ({confidence}%)", image_path=filepath)
+
+if __name__ == "__main__":
+    app.run(debug=True)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-# from flask import Flask, render_template, request, redirect, url_for,session
-# #from config import get_db_connection
-# import mysql.connector
-
-# def get_db_connection():
-#     conn = mysql.connector.connect(host="localhost", user="root", password="shankar@2807", database="library_db")
-#     return conn
-
-
-# # Show all books
-
-# def index():
-#     conn = get_db_connection()
-#     cursor = conn.cursor(dictionary=True)
-#     cursor.execute("SELECT * FROM Book")
-#     books = cursor.fetchall()
-#     conn.close()
-#     return render_template('index.html', books=books)
-
-# # Add book
-
-# def add_book():
-#     if request.method == 'POST':
-#         bname = request.form['bname']
-#         price = request.form['price']
-#         author = request.form['author']
-#         conn = get_db_connection()
-#         cursor = conn.cursor()
-#         cursor.execute("INSERT INTO Book (bname, price, author) VALUES (%s, %s, %s)", 
-#                        (bname, price, author))
-#         conn.commit()
-#         conn.close()
-#         return redirect(url_for('index'))
-#     return render_template('add_book.html')
-
-# # Edit book by id
-
-# def edit_book(bid):
-#     conn = get_db_connection()
-#     cursor = conn.cursor(dictionary=True)
-#     cursor.execute("SELECT * FROM Book WHERE bid = %s", (bid,))
-#     book = cursor.fetchone()
-#     if request.method == 'POST':
-#         bname = request.form['bname']
-#         price = request.form['price']
-#         author = request.form['author']
-#         cursor.execute("UPDATE Book SET bname=%s, price=%s, author=%s WHERE bid=%s", 
-#                        (bname, price, author, bid))
-#         conn.commit()
-#         conn.close()
-#         return redirect(url_for('index'))
-#     conn.close()
-#     return render_template('edit_book.html', book=book)
-
-# # Delete book by id
-
-# def delete_book(bid):
-#     conn = get_db_connection()
-#     cursor = conn.cursor()
-#     cursor.execute("DELETE FROM Book WHERE bid = %s", (bid,))
-#     conn.commit()
-#     conn.close()
-#     return redirect(url_for('index'))
-
-# # Search book by id or name
-
-# def search_book():
-#     search = request.form['search']
-#     conn = get_db_connection()
-#     cursor = conn.cursor(dictionary=True)
-#     query = "SELECT * FROM Book WHERE bid = %s OR bname LIKE %s"
-#     cursor.execute(query, (search, "%" + search + "%"))
-#     books = cursor.fetchall()
-#     conn.close()
-#     return render_template('index.html', books=books)
 
