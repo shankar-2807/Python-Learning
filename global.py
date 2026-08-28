@@ -1,7 +1,6 @@
 def msg():
-    print('Inside the function :',name)
+    print('inside the function:',{name})
 
-name = "I Love Coding"
+name = 'I Love Coding'
 msg()
-
 
