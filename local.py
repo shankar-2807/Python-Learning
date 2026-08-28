@@ -1,7 +1,17 @@
-def msg():
-    result = 'I Love Cricket'
-    print(result)
+def local():
+    name = 'shanakr mashalkar'
+    print(name)
 
-msg()
+local()
+
+
+
+##############################################
+
+def globall():
+    print(namee)
+
+namee = 'pratik kshirsagar'
+globall()
 
 
