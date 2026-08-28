@@ -1,7 +1,4 @@
-
-def keyword(name,city):
+def keyword (name,city):
     print(f'welcome {name} to the {city}')
 
-keyword(city='pune',name='shankar')
-
-
+keyword(city='tuljapur', name='shankar')
