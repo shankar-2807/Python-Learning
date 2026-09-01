@@ -1,4 +1,2 @@
-101|shankar mashalkar|python|7387972807|mashalkarshankar9@gmail.com
-102|pragati mhaske|python|7387972807|mhaskepragati9@gmail.com
-103|dipali sawant|Flask/Django|7387972807|dipalisawant9@gmail.com
-104|Pratik Pawar|Data Science|1234567890|pratikpawar9@gmail.com
+101|Shankar Mashalkar|22||7387972807|mashalkarshankar9@gmail.com
+102|pragati|22||1234567890|pragatimhaske98@gmail.com
