@@ -1,4 +1,1 @@
-1|Python|6 Months|40000
-2|java|6 Month|40000
-3|MySql|6 Months|40000
-4|Testing|6 Months|40000
+1|python|6 months|40000
