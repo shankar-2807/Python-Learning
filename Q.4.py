@@ -1,16 +1,34 @@
-#Write a program to calculate the total cost of painting. The interior of building with four equal sized walls.
-height = int(input("Enter a height of wall in meter: "))
-width = int(input("Enter a width of wall in meter : "))
+# Q.4 what is Decision Making in Python
 
-area_of_wall = (height * width)
-print("area_of_wall: ",area_of_wall)
+'''
+Decision making in Python allows a program to choose different actions based on conditions.
+It is used when you want to perform certain code only if a specific condition is true.
+Python provides decision-making statements like if, if-else, and if-elif-else.
+These statements evaluate expressions and execute code based on True/False results.
+Decision making helps programs behave logically, based on user input or program conditions.  '''
 
-interior_of_building_size = (area_of_wall * 4)
-print("interior_of_building_size: ",interior_of_building_size)
+# age = 18
 
-per_meter_cost = 20
-Total_cost_of_painting_is = (interior_of_building_size * per_meter_cost)
+# if age >= 18:
+#     print("You can vote")
+# else:
+#     print("You cannot vote")
 
-print("Total cost of painting is: ",Total_cost_of_painting_is)
+
+marks = int(input("Enter marks(0 to 100): "))
+
+if marks < 0:
+    print("Student failed with minus marks")
+elif marks<35 and marks>=0:
+    print("Student Falied")
+elif marks>=90 and marks<=100:
+    print("Student pass with A+ grade")
+elif marks > 100 :
+    print("Enter valid marks less than 100")
+elif marks >=35:
+    print("Student Pass")
+else:
+    print("invalid choice")
+
 
 
