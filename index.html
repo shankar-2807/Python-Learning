@@ -1,49 +1,93 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Animal Detection System</title>
+  <meta charset="utf-8">
+  <title>Colored Square Detector</title>
   <style>
     body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-image: url("/static/uploads/animals.jpg");
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
+    font-family: Arial, sans-serif;
+    margin: 0; /* remove default margin */
+    height: 100vh; /* full screen height */
+    display: flex; /* enable flexbox */
+    flex-direction: column; /* stack elements vertically */
+    justify-content: center; /* center vertically */
+    align-items: center; /* center horizontally */
+    background-color: yellowgreen; /* optional background */
+  }
+  #canvas {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+  }
+    #preview {
+      max-width: 640px;
+      max-height: 480px;
+      border: 1px solid black;
     }
-    .container {
-      background-color: papayawhip;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      text-align: center;
-      width: 500px;
-    }
-    input[type="file"], button {
+    #canvas {
+      position: relative;
+      display: block;
       margin-top: 10px;
+    }
+    .overlay {
+      position: absolute;
+      left:0;
+      top:0;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Upload an Image for Animal Detection</h2>
-    <form action="/predict" method="post" enctype="multipart/form-data">
-      <input type="file" name="file" accept="image/*" required><br><br>
-      <h3>Click Here To Predict</h3>
-      <button type="submit">Predict</button>
-    </form>
-    <br><br>
-    {% if prediction %}
-      <h3>Prediction: {{ prediction }}</h3>
-      <img src="{{ image_path }}" alt="Uploaded Image" width="300">
-    {% endif %}
+  <h2>Colored Square Detector (Demo)</h2>
+  <p>Upload an image created by the notebook (or any image with a single red/green/blue square).</p>
+  <input type="file" id="file" accept="image/*"><br>
+  <button id="predict">Detect</button>
+  <div style="position:relative;">
+    <canvas id="canvas" width="640" height="480"></canvas>
   </div>
+  <pre id="result"></pre>
+
+<script>
+const fileInput = document.getElementById('file');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let img = new Image();
+
+fileInput.addEventListener('change', (e)=>{
+  const f = e.target.files[0];
+  if(!f) return;
+  const url = URL.createObjectURL(f);
+  img.onload = () => {
+    // fit image to canvas
+    const scale = Math.min(canvas.width/img.width, canvas.height/img.height);
+    const w = img.width*scale, h = img.height*scale;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(img, 0, 0, w, h);
+  };
+  img.src = url;
+});
+
+document.getElementById('predict').addEventListener('click', async ()=>{
+  if(!img.src){ alert('Choose an image first'); return; }
+  // convert canvas image to blob
+  const dataUrl = canvas.toDataURL('image/png');
+  const res = await fetch('/predict', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({image: dataUrl})
+  });
+  const json = await res.json();
+  document.getElementById('result').textContent = JSON.stringify(json, null, 2);
+  // draw bbox
+  if(json.bbox){
+    const [x,y,w,h] = json.bbox;
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(x, y, w, h);
+    ctx.fillStyle = 'black';
+    ctx.font = '18px Arial';
+    ctx.fillText(json.class + ' (' + (json.score||'') + ')', x, Math.max(20, y-6));
+  }
+});
+</script>
 </body>
 </html>
-
 
